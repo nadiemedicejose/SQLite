@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white" >
+
+    <LinearLayout
+        android:layout_margin="6pt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_notas"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Título" />
+
+        <TextView
+            android:id="@+id/textViewContenido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contenido" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_margin="2pt"
+                android:id="@+id/imageViewEdit"
+                android:layout_width="40pt"
+                android:layout_height="20pt"
+                android:layout_weight="1"
+                app:srcCompat="@mipmap/ic_edit" />
+
+            <ImageView
+                android:layout_margin="2pt"
+                android:id="@+id/imageViewDelete"
+                android:layout_width="40pt"
+                android:layout_height="20pt"
+                android:layout_weight="1"
+                app:srcCompat="@mipmap/ic_delete" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
