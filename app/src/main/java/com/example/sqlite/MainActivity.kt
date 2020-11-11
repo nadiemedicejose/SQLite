@@ -20,13 +20,30 @@ class MainActivity (var adapter: NotasAdapter ?= null) : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        listaNotas.add(Notas(1, "Primer título", "Primer descripción"))
-        listaNotas.add(Notas(2, "Segundo título", "Segunda descripción"))
-        listaNotas.add(Notas(3, "Tercer título", "Tercera descripción"))
+        cargarQuery("%") // Cualquier titulo
+
+    }
+
+    fun cargarQuery(titulo: String) {
+        var baseDatos = DBManager(this)
+        val columnas = arrayOf("ID", "Titulo", "Descripcion")
+        val selectionArgs = arrayOf(titulo)
+        val cursor = baseDatos.query(columnas, "Titulo LIKE ?", selectionArgs, "Titulo")
+
+        listaNotas.clear()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val ID = cursor.getInt(cursor.getColumnIndex("ID"))
+                val titulo = cursor.getString(cursor.getColumnIndex("Titulo"))
+                val descripcion = cursor.getString(cursor.getColumnIndex("Descripcion"))
+
+                listaNotas.add(Notas(ID, titulo, descripcion))
+            } while (cursor.moveToNext())
+        }
 
         adapter = NotasAdapter(this, listaNotas)
         listView.adapter = adapter
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,6 +56,7 @@ class MainActivity (var adapter: NotasAdapter ?= null) : AppCompatActivity() {
         buscar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 Toast.makeText(applicationContext, query, Toast.LENGTH_LONG).show()
+                cargarQuery("%" + query + "%")
                 return false
             }
 
@@ -61,7 +79,7 @@ class MainActivity (var adapter: NotasAdapter ?= null) : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    class NotasAdapter(contexto: Context, var listaNotas: ArrayList<Notas>):BaseAdapter() {
+    inner  class NotasAdapter(contexto: Context, var listaNotas: ArrayList<Notas>):BaseAdapter() {
 
         var contexto: Context ?= contexto
 
@@ -85,6 +103,14 @@ class MainActivity (var adapter: NotasAdapter ?= null) : AppCompatActivity() {
 
             miVista.textViewTitulo.text = nota.titulo!!
             miVista.textViewContenido.text = nota.contenido!!
+
+            miVista.imageViewDelete.setOnClickListener {
+                val dbManager = DBManager(this.contexto!!)
+                val selectionArgs = arrayOf(nota.notaID.toString())
+
+                dbManager.borrar("ID=?", selectionArgs)
+
+            }
 
             return miVista
         }
